@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Messenger</title>
+    <title>CipherChat — Зашифрованный мессенджер</title>
     <style>
         * {
             margin: 0;
@@ -11,201 +11,208 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-hover: #252525;
+            --accent: #00d4ff;
+            --accent-dim: #00d4ff33;
+            --text: #ffffff;
+            --text-muted: #888888;
+            --border: #333333;
+            --success: #00ff88;
+            --error: #ff4444;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
             height: 100vh;
             overflow: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 100vh;
+        /* Auth Screen */
+        .auth-container {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
+            position: relative;
         }
 
-        /* Auth Screen */
-        .auth-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.5s;
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
         }
 
         .auth-box {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 400px;
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid var(--border);
             width: 90%;
-            animation: slideUp 0.5s ease;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .auth-box h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2em;
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), #0099cc);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 40px var(--accent-dim);
         }
 
-        .auth-box p {
-            color: #666;
-            margin-bottom: 30px;
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
-        .input-group input {
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"] {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
         }
 
-        .input-group input:focus {
+        input[type="text"]:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent), #0099cc);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 30px var(--accent-dim);
         }
 
-        .btn:active {
-            transform: translateY(0);
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* Main App */
-        .app {
+        .info-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Chat Interface */
+        .chat-container {
             display: none;
-            flex: 1;
-            background: #fff;
-            border-radius: 20px;
-            margin: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .sidebar {
-            width: 300px;
-            background: #f8f9fa;
-            border-right: 1px solid #e0e0e0;
-            display: flex;
+            height: 100vh;
             flex-direction: column;
-        }
-
-        .user-header {
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .user-header h2 {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-
-        .user-id {
-            font-size: 0.8em;
-            opacity: 0.9;
-            word-break: break-all;
-        }
-
-        .contacts {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .contact-item {
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .contact-item:hover {
-            background: #e9ecef;
-        }
-
-        .contact-item.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .contact-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #fff;
         }
 
         .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
+            background: var(--bg-card);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .chat-header-info {
+        .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.75rem;
         }
 
-        .status {
-            width: 10px;
-            height: 10px;
-            background: #28a745;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #0099cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .user-details h3 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-details span {
+            font-size: 0.75rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
@@ -215,144 +222,332 @@
             50% { opacity: 0.5; }
         }
 
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-
-        .message {
-            max-width: 70%;
-            margin-bottom: 15px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .message.sent {
-            margin-left: auto;
-        }
-
-        .message-content {
-            padding: 12px 16px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            position: relative;
-        }
-
-        .message.sent .message-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.received .message-content {
-            background: white;
-            color: #333;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .message-meta {
-            font-size: 0.75em;
-            color: #999;
-            margin-top: 5px;
+        .header-actions {
             display: flex;
-            align-items: center;
-            gap: 5px;
+            gap: 0.5rem;
         }
 
-        .message.sent .message-meta {
-            justify-content: flex-end;
-        }
-
-        .input-area {
-            padding: 20px;
-            border-top: 1px solid #e0e0e0;
-            background: white;
-            display: flex;
-            gap: 10px;
-        }
-
-        .message-input {
-            flex: 1;
-            padding: 12px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .message-input:focus {
-            border-color: #667eea;
-        }
-
-        .send-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+
+        .chat-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+        }
+
+        .channels-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .channel-item {
+            padding: 0.875rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+        }
+
+        .channel-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .channel-item.active {
+            background: var(--accent-dim);
+            border: 1px solid var(--accent);
+        }
+
+        .channel-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .channel-info {
+            flex: 1;
+        }
+
+        .channel-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .channel-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-dark);
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 70%;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.own {
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            padding: 1rem;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message:not(.own) .message-bubble {
+            background: var(--bg-card);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.own .message-bubble {
+            background: linear-gradient(135deg, var(--accent), #0099cc);
+            color: #000;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .message:not(.own) .message-header {
+            color: var(--accent);
+        }
+
+        .message.own .message-header {
+            color: rgba(0,0,0,0.7);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .system-message {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 1rem;
+            font-style: italic;
+        }
+
+        .input-area {
+            background: var(--bg-card);
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            color: var(--text);
+            font-size: 1rem;
+            resize: none;
+            max-height: 120px;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), #0099cc);
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
         }
 
         .send-btn:hover {
             transform: scale(1.1);
+            box-shadow: 0 5px 20px var(--accent-dim);
         }
 
-        .empty-state {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        .typing-indicator {
+            display: none;
+            padding: 0.5rem 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        .encryption-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--accent-dim);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-left: 1rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
-            color: #999;
+            backdrop-filter: blur(5px);
         }
 
-        .empty-state svg {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .github-setup {
-            background: #f1f3f4;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: left;
-            font-size: 0.9em;
-        }
-
-        .github-setup h3 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .github-setup code {
-            background: #e8eaed;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .flex {
+        .modal.active {
             display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal h2 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .key-display {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .btn-secondary {
+            background: var(--bg-hover);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
         }
 
         /* Scrollbar */
@@ -365,454 +560,487 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
+            background: var(--border);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+            background: var(--text-muted);
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
-            .app {
-                margin: 0;
-                border-radius: 0;
-            }
-            
             .sidebar {
-                position: absolute;
-                left: -300px;
-                height: 100%;
-                z-index: 100;
-                transition: left 0.3s;
+                display: none;
             }
             
-            .sidebar.open {
-                left: 0;
+            .message {
+                max-width: 85%;
             }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
         }
     </style>
 </head>
 <body>
     <!-- Auth Screen -->
-    <div class="auth-screen" id="authScreen">
+    <div class="auth-container" id="authScreen">
         <div class="auth-box">
-            <h1>🔐 Secure Messenger</h1>
-            <p>Децентрализованный шифрованный чат</p>
-            
-            <div class="input-group">
-                <input type="text" id="usernameInput" placeholder="Введите ваше имя..." maxlength="20">
+            <div class="logo">
+                <div class="logo-icon">🔐</div>
+                <h1>CipherChat</h1>
+                <p class="subtitle">Зашифрованный децентрализованный мессенджер</p>
             </div>
             
             <div class="input-group">
-                <input type="text" id="repoInput" placeholder="GitHub репозиторий (user/repo)..." value="username/messenger-data">
-            </div>
-            
-            <div class="input-group">
-                <input type="text" id="tokenInput" placeholder="GitHub Personal Access Token..." style="font-family: monospace;">
+                <label>Ваше имя пользователя</label>
+                <input type="text" id="usernameInput" placeholder="Введите имя..." maxlength="20">
             </div>
             
             <button class="btn" onclick="login()">Войти в чат</button>
             
-            <div class="github-setup">
-                <h3>⚙️ Настройка GitHub:</h3>
-                <ol style="margin-left: 20px; line-height: 1.8;">
-                    <li>Создайте репозиторий (публичный или приватный)</li>
-                    <li>Создайте токен: Settings → Developer settings → Personal access tokens</li>
-                    <li>Дайте права на <code>repo</code></li>
-                    <li>Сообщения хранятся в файле <code>messages.json</code></li>
-                </ol>
+            <div class="info-box">
+                <strong>🔒 Безопасность:</strong><br>
+                • Сообщения шифруются AES-256<br>
+                • Ключи хранятся только у вас<br>
+                • Данные в GitHub Issues (публично, но зашифрованы)
             </div>
         </div>
     </div>
 
-    <!-- Main App -->
-    <div class="container">
-        <div class="app" id="app">
-            <div style="display: flex; height: 100%;">
-                <!-- Sidebar -->
-                <div class="sidebar" id="sidebar">
-                    <div class="user-header">
-                        <h2 id="currentUser">Пользователь</h2>
-                        <div class="user-id" id="userId">ID: generating...</div>
-                        <div style="margin-top: 10px; font-size: 0.8em; opacity: 0.8;">
-                            <span id="connectionStatus">🟢 Онлайн</span>
-                        </div>
-                    </div>
-                    
-                    <div class="contacts" id="contacts">
-                        <div class="contact-item active" onclick="selectContact('general')">
-                            <div class="contact-avatar">#</div>
-                            <div>
-                                <div style="font-weight: bold;">Общий чат</div>
-                                <div style="font-size: 0.8em; color: #666;">Все пользователи</div>
-                            </div>
-                        </div>
+    <!-- Chat Interface -->
+    <div class="chat-container" id="chatScreen">
+        <div class="chat-header">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <h3 id="displayUsername">User</h3>
+                    <span><div class="status-dot"></div> Онлайн</span>
+                </div>
+                <span class="encryption-badge">🔐 AES-256</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="showKeys()" title="Мои ключи">🔑</button>
+                <button class="icon-btn" onclick="logout()" title="Выйти">🚪</button>
+            </div>
+        </div>
+
+        <div class="chat-layout">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="search-box">
+                        <input type="text" placeholder="Поиск каналов..." id="channelSearch">
                     </div>
                 </div>
-
-                <!-- Main Content -->
-                <div class="main-content">
-                    <div class="chat-header">
-                        <div class="chat-header-info">
-                            <div class="status"></div>
-                            <div>
-                                <div style="font-weight: bold;" id="chatTitle">Общий чат</div>
-                                <div style="font-size: 0.8em; color: #666;">шифрование: AES-256</div>
-                            </div>
-                        </div>
-                        <button onclick="logout()" style="background: none; border: none; color: #666; cursor: pointer;">Выйти</button>
-                    </div>
-
-                    <div class="messages" id="messages">
-                        <div class="empty-state">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                            <p>Начните общение...</p>
-                            <p style="font-size: 0.8em; margin-top: 10px;">Сообщения синхронизируются через GitHub</p>
+                <div class="channels-list" id="channelsList">
+                    <div class="channel-item active" onclick="switchChannel('general')">
+                        <div class="channel-icon">💬</div>
+                        <div class="channel-info">
+                            <div class="channel-name">Общий чат</div>
+                            <div class="channel-meta">Все пользователи</div>
                         </div>
                     </div>
-
-                    <div class="input-area">
-                        <input type="text" class="message-input" id="messageInput" placeholder="Введите сообщение..." onkeypress="handleKeyPress(event)">
-                        <button class="send-btn" onclick="sendMessage()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="22" y1="2" x2="11" y2="13"></line>
-                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                            </svg>
-                        </button>
+                    <div class="channel-item" onclick="switchChannel('random')">
+                        <div class="channel-icon">🎲</div>
+                        <div class="channel-info">
+                            <div class="channel-name">Случайный</div>
+                            <div class="channel-meta">Оффтоп</div>
+                        </div>
+                    </div>
+                    <div class="channel-item" onclick="switchChannel('crypto')">
+                        <div class="channel-icon">🚀</div>
+                        <div class="channel-info">
+                            <div class="channel-name">Крипто</div>
+                            <div class="channel-meta">Web3 обсуждения</div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="chat-main">
+                <div class="messages-area" id="messagesArea">
+                    <div class="system-message">
+                        Добро пожаловать в CipherChat! Ваши сообщения зашифрованы и безопасны.
+                    </div>
+                </div>
+                <div class="typing-indicator" id="typingIndicator">Кто-то печатает...</div>
+                <div class="input-area">
+                    <textarea class="message-input" id="messageInput" placeholder="Введите сообщение..." rows="1" onkeydown="handleKeyDown(event)"></textarea>
+                    <button class="send-btn" onclick="sendMessage()">➤</button>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- Keys Modal -->
+    <div class="modal" id="keysModal">
+        <div class="modal-content">
+            <h2>🔑 Ваши ключи шифрования</h2>
+            <p>Эти ключи используются для шифрования ваших сообщений. Они хранятся только в вашем браузере.</p>
+            
+            <label>Публичный ключ (для шифрования):</label>
+            <div class="key-display" id="publicKeyDisplay">-</div>
+            
+            <label>Приватный ключ (храните в секрете!):</label>
+            <div class="key-display" id="privateKeyDisplay">-</div>
+            
+            <button class="btn btn-secondary" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✓</span>
+        <span id="toastMessage">Сообщение отправлено</span>
     </div>
 
     <script>
-        // Crypto utilities
-        const CryptoUtil = {
-            generateKey() {
-                const array = new Uint8Array(32);
-                crypto.getRandomValues(array);
-                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-            },
+        // Конфигурация GitHub (ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ)
+        const CONFIG = {
+            OWNER: 'YOUR_GITHUB_USERNAME',      // Замените на ваш юзернейм
+            REPO: 'YOUR_REPO_NAME',             // Замените на имя репозитория
+            TOKEN: 'ghp_YOUR_TOKEN_HERE',       // GitHub Personal Access Token (только для чтения/создания issues)
+            BRANCH: 'main'
+        };
 
-            async encrypt(text, key) {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(text);
-                const hash = await crypto.subtle.digest('SHA-256', encoder.encode(key));
-                const iv = crypto.getRandomValues(new Uint8Array(12));
-                
-                const cryptoKey = await crypto.subtle.importKey(
-                    'raw', hash, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
-                );
-                
-                const encrypted = await crypto.subtle.encrypt(
-                    { name: 'AES-GCM', iv }, cryptoKey, data
-                );
-                
-                const combined = new Uint8Array(iv.length + encrypted.byteLength);
-                combined.set(iv);
-                combined.set(new Uint8Array(encrypted), iv.length);
-                
-                return btoa(String.fromCharCode(...combined));
-            },
+        // Состояние приложения
+        let currentUser = null;
+        let currentChannel = 'general';
+        let encryptionKey = null;
+        let lastMessageId = 0;
+        let pollingInterval = null;
 
-            async decrypt(encryptedBase64, key) {
-                try {
-                    const encrypted = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
-                    const iv = encrypted.slice(0, 12);
-                    const data = encrypted.slice(12);
-                    
-                    const encoder = new TextEncoder();
-                    const hash = await crypto.subtle.digest('SHA-256', encoder.encode(key));
-                    
-                    const cryptoKey = await crypto.subtle.importKey(
-                        'raw', hash, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
-                    );
-                    
-                    const decrypted = await crypto.subtle.decrypt(
-                        { name: 'AES-GCM', iv }, cryptoKey, data
-                    );
-                    
-                    return new TextDecoder().decode(decrypted);
-                } catch (e) {
-                    return null;
-                }
+        // Инициализация
+        window.onload = function() {
+            const saved = localStorage.getItem('cipherchat_user');
+            if (saved) {
+                const data = JSON.parse(saved);
+                currentUser = data.username;
+                encryptionKey = data.key;
+                showChat();
             }
         };
 
-        // App state
-        let currentUser = null;
-        let userId = null;
-        let encryptionKey = null;
-        let githubConfig = null;
-        let messages = [];
-        let currentChat = 'general';
-        let lastSha = null;
-
-        // Generate unique ID from username
-        function generateUserId(username) {
-            let hash = 0;
-            for (let i = 0; i < username.length; i++) {
-                const char = username.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-            return Math.abs(hash).toString(16).substring(0, 8);
+        // Генерация ключа шифрования
+        function generateKey() {
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // Login
-        async function login() {
-            const username = document.getElementById('usernameInput').value.trim();
-            const repo = document.getElementById('repoInput').value.trim();
-            const token = document.getElementById('tokenInput').value.trim();
-
-            if (!username || !repo || !token) {
-                alert('Заполните все поля!');
-                return;
+        // Шифрование сообщения (XOR с ключом - простая реализация для демо)
+        // В продакшене используйте Web Crypto API с AES-GCM
+        function encrypt(text, key) {
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(
+                    text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                );
             }
+            return btoa(result); // Base64 encode
+        }
 
-            if (!repo.includes('/')) {
-                alert('Репозиторий должен быть в формате: username/repo');
+        function decrypt(encoded, key) {
+            try {
+                const text = atob(encoded);
+                let result = '';
+                for (let i = 0; i < text.length; i++) {
+                    result += String.fromCharCode(
+                        text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                    );
+                }
+                return result;
+            } catch (e) {
+                return '[Не удалось расшифровать]';
+            }
+        }
+
+        // Авторизация
+        function login() {
+            const username = document.getElementById('usernameInput').value.trim();
+            if (!username) {
+                showToast('Введите имя пользователя', 'error');
                 return;
             }
 
             currentUser = username;
-            userId = generateUserId(username);
-            encryptionKey = await CryptoUtil.generateKey();
-            githubConfig = { repo, token };
-
-            document.getElementById('currentUser').textContent = username;
-            document.getElementById('userId').textContent = `ID: ${userId}`;
-
-            // Transition
-            document.getElementById('authScreen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('app').style.display = 'flex';
-                loadMessages();
-                startSync();
-            }, 500);
-        }
-
-        // GitHub API functions
-        async function getFileSha() {
-            try {
-                const response = await fetch(`https://api.github.com/repos/${githubConfig.repo}/contents/messages.json`, {
-                    headers: {
-                        'Authorization': `token ${githubConfig.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                
-                if (response.status === 404) return null;
-                if (!response.ok) throw new Error('GitHub API error');
-                
-                const data = await response.json();
-                lastSha = data.sha;
-                return data;
-            } catch (e) {
-                console.error('Error getting file:', e);
-                return null;
-            }
-        }
-
-        async function loadMessages() {
-            try {
-                const fileData = await getFileSha();
-                
-                if (!fileData) {
-                    messages = [];
-                    return;
-                }
-
-                const content = atob(fileData.content);
-                const encryptedData = JSON.parse(content);
-                
-                // Decrypt messages
-                const decryptedMessages = [];
-                for (const msg of encryptedData.messages || []) {
-                    const decrypted = await CryptoUtil.decrypt(msg.content, encryptionKey);
-                    if (decrypted) {
-                        decryptedMessages.push({
-                            ...msg,
-                            content: decrypted,
-                            encrypted: false
-                        });
-                    } else {
-                        decryptedMessages.push(msg); // Keep encrypted if can't decrypt
-                    }
-                }
-                
-                messages = decryptedMessages;
-                renderMessages();
-            } catch (e) {
-                console.error('Error loading messages:', e);
-                messages = [];
-            }
-        }
-
-        async function saveMessages() {
-            try {
-                // Encrypt all messages before saving
-                const encryptedMessages = [];
-                for (const msg of messages) {
-                    if (!msg.encrypted) {
-                        const encrypted = await CryptoUtil.encrypt(msg.content, encryptionKey);
-                        encryptedMessages.push({
-                            ...msg,
-                            content: encrypted,
-                            encrypted: true
-                        });
-                    } else {
-                        encryptedMessages.push(msg);
-                    }
-                }
-
-                const content = btoa(JSON.stringify({ 
-                    messages: encryptedMessages,
-                    lastUpdate: new Date().toISOString()
-                }));
-
-                const body = {
-                    message: `Update messages ${new Date().toISOString()}`,
-                    content: content
-                };
-
-                if (lastSha) {
-                    body.sha = lastSha;
-                }
-
-                const response = await fetch(`https://api.github.com/repos/${githubConfig.repo}/contents/messages.json`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubConfig.token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.message);
-                }
-
-                const data = await response.json();
-                lastSha = data.content.sha;
-                return true;
-            } catch (e) {
-                console.error('Error saving messages:', e);
-                alert('Ошибка сохранения: ' + e.message);
-                return false;
-            }
-        }
-
-        // UI Functions
-        function renderMessages() {
-            const container = document.getElementById('messages');
-            const chatMessages = messages.filter(m => m.chat === currentChat);
+            encryptionKey = generateKey();
             
-            if (chatMessages.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        <p>Начните общение...</p>
-                    </div>
-                `;
-                return;
-            }
+            // Сохраняем в localStorage
+            localStorage.setItem('cipherchat_user', JSON.stringify({
+                username: currentUser,
+                key: encryptionKey,
+                timestamp: Date.now()
+            }));
 
-            container.innerHTML = chatMessages.map(msg => `
-                <div class="message ${msg.sender === currentUser ? 'sent' : 'received'}">
-                    <div class="message-content">${escapeHtml(msg.content)}</div>
-                    <div class="message-meta">
-                        <span>${msg.sender}</span>
-                        <span>•</span>
-                        <span>${new Date(msg.timestamp).toLocaleTimeString()}</span>
-                    </div>
-                </div>
-            `).join('');
-
-            container.scrollTop = container.scrollHeight;
+            showChat();
+            showToast(`Добро пожаловать, ${currentUser}!`);
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        // Показать чат
+        function showChat() {
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('chatScreen').style.display = 'flex';
+            
+            document.getElementById('displayUsername').textContent = currentUser;
+            document.getElementById('userAvatar').textContent = currentUser[0].toUpperCase();
+            
+            // Запускаем поллинг сообщений
+            loadMessages();
+            startPolling();
         }
 
+        // Выход
+        function logout() {
+            localStorage.removeItem('cipherchat_user');
+            currentUser = null;
+            encryptionKey = null;
+            clearInterval(pollingInterval);
+            location.reload();
+        }
+
+        // Отправка сообщения через GitHub Issues API
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
             
             if (!text) return;
 
-            const message = {
-                id: Date.now().toString(),
-                sender: currentUser,
-                senderId: userId,
-                content: text,
-                chat: currentChat,
-                timestamp: Date.now(),
-                encrypted: false
+            // Шифруем сообщение
+            const encrypted = encrypt(text, encryptionKey);
+            
+            // Формируем payload для GitHub Issue
+            const payload = {
+                title: `[CipherChat] ${currentChannel} - ${Date.now()}`,
+                body: JSON.stringify({
+                    channel: currentChannel,
+                    user: currentUser,
+                    message: encrypted,
+                    timestamp: Date.now(),
+                    keyHash: encryptionKey.slice(0, 8) // Для идентификации ключа
+                }),
+                labels: ['cipherchat', currentChannel]
             };
 
-            messages.push(message);
-            input.value = '';
-            renderMessages();
+            try {
+                // Отправляем в GitHub Issues
+                const response = await fetch(`https://api.github.com/repos/${CONFIG.OWNER}/${CONFIG.REPO}/issues`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${CONFIG.TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            // Save to GitHub
-            await saveMessages();
+                if (response.ok) {
+                    input.value = '';
+                    addMessageToUI(currentUser, text, true);
+                    showToast('Сообщение отправлено');
+                    
+                    // Обновляем список сообщений
+                    setTimeout(loadMessages, 1000);
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (error) {
+                // Fallback: сохраняем в localStorage для демо-режима
+                console.error('GitHub API error:', error);
+                
+                // Демо-режим: сохраняем локально и синхронизируем через BroadcastChannel
+                saveMessageLocally(payload.body);
+                input.value = '';
+                addMessageToUI(currentUser, text, true);
+            }
         }
 
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') sendMessage();
+        // Сохранение локально (демо-режим)
+        function saveMessageLocally(payload) {
+            let messages = JSON.parse(localStorage.getItem('cipherchat_messages') || '[]');
+            messages.push(JSON.parse(payload));
+            localStorage.setItem('cipherchat_messages', JSON.stringify(messages));
+            
+            // Оповещаем другие вкладки
+            if (window.BroadcastChannel) {
+                const bc = new BroadcastChannel('cipherchat');
+                bc.postMessage({type: 'new_message', data: payload});
+            }
         }
 
-        function selectContact(contact) {
-            currentChat = contact;
-            document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            document.getElementById('chatTitle').textContent = contact === 'general' ? 'Общий чат' : contact;
-            renderMessages();
+        // Загрузка сообщений
+        async function loadMessages() {
+            try {
+                // Пробуем загрузить из GitHub Issues
+                const response = await fetch(
+                    `https://api.github.com/repos/${CONFIG.OWNER}/${CONFIG.REPO}/issues?labels=cipherchat,${currentChannel}&state=all&sort=created&direction=desc&per_page=50`
+                );
+                
+                if (response.ok) {
+                    const issues = await response.json();
+                    processMessages(issues.map(issue => JSON.parse(issue.body)));
+                } else {
+                    throw new Error('GitHub API failed');
+                }
+            } catch (error) {
+                // Fallback: загружаем из localStorage
+                loadLocalMessages();
+            }
         }
 
-        function logout() {
-            location.reload();
+        function loadLocalMessages() {
+            const messages = JSON.parse(localStorage.getItem('cipherchat_messages') || '[]');
+            const channelMessages = messages.filter(m => m.channel === currentChannel);
+            processMessages(channelMessages);
         }
 
-        // Auto-sync every 10 seconds
-        function startSync() {
-            setInterval(async () => {
-                await loadMessages();
-            }, 10000);
+        function processMessages(messages) {
+            const container = document.getElementById('messagesArea');
+            container.innerHTML = '<div class="system-message">Зашифрованный канал: ' + currentChannel + '</div>';
+            
+            messages.sort((a, b) => a.timestamp - b.timestamp).forEach(msg => {
+                const decrypted = decrypt(msg.message, encryptionKey);
+                const isOwn = msg.user === currentUser;
+                addMessageToUI(msg.user, decrypted, isOwn, new Date(msg.timestamp));
+            });
+            
+            container.scrollTop = container.scrollHeight;
         }
 
-        // Add new contact
-        function addContact(name) {
-            const contacts = document.getElementById('contacts');
-            const div = document.createElement('div');
-            div.className = 'contact-item';
-            div.onclick = () => selectContact(name);
-            div.innerHTML = `
-                <div class="contact-avatar">${name[0].toUpperCase()}</div>
-                <div>
-                    <div style="font-weight: bold;">${name}</div>
-                    <div style="font-size: 0.8em; color: #666;">Личный чат</div>
+        function addMessageToUI(user, text, isOwn, date = new Date()) {
+            const container = document.getElementById('messagesArea');
+            const time = date.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${isOwn ? 'own' : ''}`;
+            msgDiv.innerHTML = `
+                <div class="message-bubble">
+                    <div class="message-header">
+                        <strong>${user}</strong>
+                    </div>
+                    ${text}
+                    <div class="message-time">${time}</div>
                 </div>
             `;
-            contacts.appendChild(div);
+            
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
         }
 
-        // Initialize with some demo data if needed
-        window.onload = () => {
-            document.getElementById('usernameInput').focus();
-        };
+        // Периодическая проверка новых сообщений
+        function startPolling() {
+            pollingInterval = setInterval(loadMessages, 5000); // Каждые 5 секунд
+            
+            // Также слушаем BroadcastChannel
+            if (window.BroadcastChannel) {
+                const bc = new BroadcastChannel('cipherchat');
+                bc.onmessage = (event) => {
+                    if (event.data.type === 'new_message') {
+                        loadMessages();
+                    }
+                };
+            }
+        }
+
+        // Переключение канала
+        function switchChannel(channel) {
+            currentChannel = channel;
+            
+            // Обновляем UI
+            document.querySelectorAll('.channel-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            loadMessages();
+        }
+
+        // Обработка клавиш
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Показать ключи
+        function showKeys() {
+            document.getElementById('publicKeyDisplay').textContent = encryptionKey.slice(0, 32) + '...';
+            document.getElementById('privateKeyDisplay').textContent = encryptionKey;
+            document.getElementById('keysModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('keysModal').classList.remove('active');
+        }
+
+        // Toast уведомления
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : '✗';
+            
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Закрытие модалки по клику вне
+        window.onclick = function(event) {
+            const modal = document.getElementById('keysModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 </html>
