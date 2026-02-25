@@ -11,235 +11,201 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-dark: #0a0a0f;
-            --bg-card: #12121a;
-            --bg-hover: #1a1a25;
-            --accent: #00d4ff;
-            --accent-dim: #00d4ff33;
-            --text: #e0e0e0;
-            --text-muted: #888;
-            --border: #2a2a3a;
-            --success: #00ff88;
-            --warning: #ffaa00;
-            --error: #ff4444;
-        }
-
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             height: 100vh;
             overflow: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
         }
 
         /* Auth Screen */
-        .auth-container {
+        .auth-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #0f1729 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 1000;
-            backdrop-filter: blur(20px);
+            transition: opacity 0.5s;
         }
 
         .auth-box {
-            background: var(--bg-card);
-            padding: 3rem;
-            border-radius: 24px;
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
             width: 90%;
-            max-width: 420px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
+            animation: slideUp 0.5s ease;
         }
 
-        .auth-box::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
-            opacity: 0.3;
-            pointer-events: none;
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        .auth-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
+        .auth-box h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
         }
 
-        .auth-subtitle {
-            color: var(--text-muted);
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
+        .auth-box p {
+            color: #666;
+            margin-bottom: 30px;
         }
 
         .input-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            font-weight: 500;
+            margin-bottom: 20px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-dim);
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 1rem;
-            top: 2.7rem;
-            color: var(--text-muted);
+            border-color: #667eea;
         }
 
         .btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            border-radius: 12px;
-            color: #000;
-            font-weight: 600;
-            font-size: 1rem;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(0, 212, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
         }
 
         .btn:active {
             transform: translateY(0);
         }
 
-        .btn-secondary {
-            background: var(--bg-hover);
-            color: var(--text);
-            margin-top: 1rem;
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        .error-msg {
-            color: var(--error);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
+        /* Main App */
+        .app {
             display: none;
-        }
-
-        .key-display {
-            background: var(--bg-dark);
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-            word-break: break-all;
-            margin-top: 1rem;
-            border: 1px solid var(--border);
-            color: var(--accent);
-            display: none;
-        }
-
-        /* Main App Layout */
-        .app-container {
-            display: none;
-            width: 100%;
-            height: 100vh;
-            background: var(--bg-dark);
+            flex: 1;
+            background: #fff;
+            border-radius: 20px;
+            margin: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .sidebar {
-            width: 320px;
-            background: var(--bg-card);
-            border-right: 1px solid var(--border);
+            width: 300px;
+            background: #f8f9fa;
+            border-right: 1px solid #e0e0e0;
             display: flex;
             flex-direction: column;
         }
 
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
+        .user-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .user-header h2 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .user-id {
+            font-size: 0.8em;
+            opacity: 0.9;
+            word-break: break-all;
+        }
+
+        .contacts {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .contact-item {
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-item:hover {
+            background: #e9ecef;
+        }
+
+        .contact-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .user-info {
+        .chat-header-info {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 10px;
         }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #000;
-        }
-
-        .user-details h3 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .user-details p {
-            font-size: 0.75rem;
-            color: var(--success);
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--success);
+        .status {
+            width: 10px;
+            height: 10px;
+            background: #28a745;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
@@ -249,374 +215,149 @@
             50% { opacity: 0.5; }
         }
 
-        .add-contact-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--bg-hover);
-            border: none;
-            color: var(--text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .add-contact-btn:hover {
-            background: var(--accent);
-            color: #000;
-        }
-
-        .contacts-list {
+        .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 0.5rem;
-        }
-
-        .contact-item {
-            padding: 1rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .contact-item:hover {
-            background: var(--bg-hover);
-        }
-
-        .contact-item.active {
-            background: var(--accent-dim);
-            border: 1px solid var(--accent);
-        }
-
-        .contact-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--bg-hover);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            border: 2px solid transparent;
-        }
-
-        .contact-item.active .contact-avatar {
-            border-color: var(--accent);
-        }
-
-        .contact-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .contact-name {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .contact-preview {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .contact-meta {
-            text-align: right;
-        }
-
-        .contact-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.25rem;
-        }
-
-        .unread-badge {
-            background: var(--accent);
-            color: #000;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.125rem 0.5rem;
-            border-radius: 10px;
-            display: inline-block;
-        }
-
-        /* Chat Area */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--bg-dark);
-        }
-
-        .chat-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(18, 18, 26, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .chat-header-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .encryption-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--success);
-            background: rgba(0, 255, 136, 0.1);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-        }
-
-        .messages-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            padding: 20px;
+            background: #f8f9fa;
         }
 
         .message {
             max-width: 70%;
-            padding: 1rem;
-            border-radius: 16px;
-            position: relative;
-            animation: messageSlide 0.3s ease;
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease;
         }
 
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.sent {
-            align-self: flex-end;
-            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
-            color: #000;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.received {
-            align-self: flex-start;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-bottom-left-radius: 4px;
+            margin-left: auto;
         }
 
         .message-content {
-            font-size: 0.95rem;
-            line-height: 1.5;
+            padding: 12px 16px;
+            border-radius: 18px;
             word-wrap: break-word;
+            position: relative;
         }
 
-        .message-time {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 0.5rem;
+        .message.sent .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .message-meta {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 5px;
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 5px;
         }
 
-        .message-input-container {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--border);
-            background: var(--bg-card);
+        .message.sent .message-meta {
+            justify-content: flex-end;
         }
 
-        .input-wrapper {
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
             display: flex;
-            gap: 0.75rem;
-            align-items: flex-end;
-            background: var(--bg-dark);
-            padding: 0.75rem;
-            border-radius: 24px;
-            border: 1px solid var(--border);
+            gap: 10px;
         }
 
         .message-input {
             flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--text);
-            font-size: 1rem;
-            padding: 0.5rem;
-            resize: none;
-            max-height: 120px;
-            font-family: inherit;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
         }
 
         .message-input:focus {
-            outline: none;
+            border-color: #667eea;
         }
 
         .send-btn {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: var(--accent);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            color: #000;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
+            transition: transform 0.2s;
         }
 
         .send-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
         }
 
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            width: 90%;
-            max-width: 400px;
-            animation: modalSlide 0.3s ease;
-        }
-
-        @keyframes modalSlide {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--text);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Empty State */
         .empty-state {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--text-muted);
-            text-align: center;
-            padding: 2rem;
+            color: #999;
         }
 
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
         }
 
-        /* Settings Panel */
-        .settings-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.2s;
+        .github-setup {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.9em;
         }
 
-        .settings-btn:hover {
-            color: var(--text);
-            background: var(--bg-hover);
+        .github-setup h3 {
+            margin-bottom: 10px;
+            color: #333;
         }
 
-        .storage-info {
-            padding: 1rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.875rem;
-            color: var(--text-muted);
+        .github-setup code {
+            background: #e8eaed;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: var(--bg-hover);
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            overflow: hidden;
+        .hidden {
+            display: none !important;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            transition: width 0.3s;
+        .flex {
+            display: flex;
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-track {
@@ -624,787 +365,454 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 3px;
+            background: #c1c1c1;
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
+            background: #a8a8a8;
         }
 
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .sync-status {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--bg-card);
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            z-index: 100;
-            transition: all 0.3s;
-        }
-
-        .sync-status.syncing {
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .sync-status.error {
-            color: var(--error);
-            border-color: var(--error);
-        }
-
-        /* Mobile Responsive */
         @media (max-width: 768px) {
+            .app {
+                margin: 0;
+                border-radius: 0;
+            }
+            
             .sidebar {
-                position: fixed;
-                left: -100%;
+                position: absolute;
+                left: -300px;
                 height: 100%;
-                z-index: 50;
+                z-index: 100;
                 transition: left 0.3s;
             }
-
+            
             .sidebar.open {
                 left: 0;
-            }
-
-            .menu-toggle {
-                display: block;
-                background: none;
-                border: none;
-                color: var(--text);
-                font-size: 1.5rem;
-                cursor: pointer;
-                margin-right: 1rem;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
             }
         }
     </style>
 </head>
 <body>
     <!-- Auth Screen -->
-    <div class="auth-container" id="authScreen">
+    <div class="auth-screen" id="authScreen">
         <div class="auth-box">
-            <h1 class="auth-title">🔐 Secure Messenger</h1>
-            <p class="auth-subtitle">End-to-end encrypted messaging</p>
+            <h1>🔐 Secure Messenger</h1>
+            <p>Децентрализованный шифрованный чат</p>
             
-            <div id="loginForm">
-                <div class="input-group">
-                    <label>Имя пользователя</label>
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="username" placeholder="Введите имя" autocomplete="off">
-                </div>
-                
-                <div class="input-group">
-                    <label>Пароль</label>
-                    <span class="input-icon">🔑</span>
-                    <input type="password" id="password" placeholder="Минимум 8 символов">
-                </div>
-                
-                <div class="input-group" id="confirmPasswordGroup" style="display: none;">
-                    <label>Подтвердите пароль</label>
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="confirmPassword" placeholder="Повторите пароль">
-                </div>
-
-                <div class="error-msg" id="authError"></div>
-                
-                <button class="btn" onclick="handleAuth()" id="authBtn">Войти</button>
-                <button class="btn btn-secondary" onclick="toggleAuthMode()" id="toggleAuthBtn">Создать аккаунт</button>
-                
-                <div class="key-display" id="keyDisplay"></div>
+            <div class="input-group">
+                <input type="text" id="usernameInput" placeholder="Введите ваше имя..." maxlength="20">
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="repoInput" placeholder="GitHub репозиторий (user/repo)..." value="username/messenger-data">
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="tokenInput" placeholder="GitHub Personal Access Token..." style="font-family: monospace;">
+            </div>
+            
+            <button class="btn" onclick="login()">Войти в чат</button>
+            
+            <div class="github-setup">
+                <h3>⚙️ Настройка GitHub:</h3>
+                <ol style="margin-left: 20px; line-height: 1.8;">
+                    <li>Создайте репозиторий (публичный или приватный)</li>
+                    <li>Создайте токен: Settings → Developer settings → Personal access tokens</li>
+                    <li>Дайте права на <code>repo</code></li>
+                    <li>Сообщения хранятся в файле <code>messages.json</code></li>
+                </ol>
             </div>
         </div>
     </div>
 
     <!-- Main App -->
-    <div class="app-container" id="appContainer">
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-        
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="user-info">
-                    <div class="avatar" id="userAvatar">U</div>
-                    <div class="user-details">
-                        <h3 id="currentUserName">User</h3>
-                        <p><span class="status-dot"></span> Online</p>
+    <div class="container">
+        <div class="app" id="app">
+            <div style="display: flex; height: 100%;">
+                <!-- Sidebar -->
+                <div class="sidebar" id="sidebar">
+                    <div class="user-header">
+                        <h2 id="currentUser">Пользователь</h2>
+                        <div class="user-id" id="userId">ID: generating...</div>
+                        <div style="margin-top: 10px; font-size: 0.8em; opacity: 0.8;">
+                            <span id="connectionStatus">🟢 Онлайн</span>
+                        </div>
+                    </div>
+                    
+                    <div class="contacts" id="contacts">
+                        <div class="contact-item active" onclick="selectContact('general')">
+                            <div class="contact-avatar">#</div>
+                            <div>
+                                <div style="font-weight: bold;">Общий чат</div>
+                                <div style="font-size: 0.8em; color: #666;">Все пользователи</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button class="settings-btn" onclick="showSettings()" title="Настройки">⚙️</button>
-            </div>
 
-            <div class="contacts-list" id="contactsList">
-                <!-- Contacts will be loaded here -->
-            </div>
+                <!-- Main Content -->
+                <div class="main-content">
+                    <div class="chat-header">
+                        <div class="chat-header-info">
+                            <div class="status"></div>
+                            <div>
+                                <div style="font-weight: bold;" id="chatTitle">Общий чат</div>
+                                <div style="font-size: 0.8em; color: #666;">шифрование: AES-256</div>
+                            </div>
+                        </div>
+                        <button onclick="logout()" style="background: none; border: none; color: #666; cursor: pointer;">Выйти</button>
+                    </div>
 
-            <div class="storage-info">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span>Локальное хранилище</span>
-                    <span id="storageUsed">0 KB</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="storageBar" style="width: 0%"></div>
-                </div>
-            </div>
-        </aside>
+                    <div class="messages" id="messages">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <p>Начните общение...</p>
+                            <p style="font-size: 0.8em; margin-top: 10px;">Сообщения синхронизируются через GitHub</p>
+                        </div>
+                    </div>
 
-        <main class="chat-area">
-            <div class="chat-header" id="chatHeader" style="display: none;">
-                <div class="chat-header-info">
-                    <div class="avatar" id="chatAvatar">C</div>
-                    <div>
-                        <h3 id="chatName">Contact</h3>
-                        <p style="font-size: 0.875rem; color: var(--text-muted);">Зашифровано E2E</p>
+                    <div class="input-area">
+                        <input type="text" class="message-input" id="messageInput" placeholder="Введите сообщение..." onkeypress="handleKeyPress(event)">
+                        <button class="send-btn" onclick="sendMessage()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-                <div class="encryption-status">
-                    <span>🔒</span>
-                    <span>Защищено</span>
-                </div>
             </div>
-
-            <div class="messages-container" id="messagesContainer">
-                <div class="empty-state" id="emptyState">
-                    <div class="empty-icon">💬</div>
-                    <h3>Выберите контакт</h3>
-                    <p>Начните защищенный разговор</p>
-                </div>
-            </div>
-
-            <div class="message-input-container" id="inputContainer" style="display: none;">
-                <div class="input-wrapper">
-                    <textarea class="message-input" id="messageInput" placeholder="Введите сообщение..." rows="1"></textarea>
-                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Add Contact Modal -->
-    <div class="modal" id="addContactModal">
-        <div class="modal-content">
-            <h3 class="modal-title">Добавить контакт</h3>
-            <div class="input-group">
-                <label>Имя контакта</label>
-                <input type="text" id="newContactName" placeholder="Введите имя">
-            </div>
-            <div class="input-group">
-                <label>Публичный ключ (опционально)</label>
-                <input type="text" id="newContactKey" placeholder="Вставьте публичный ключ">
-            </div>
-            <button class="btn" onclick="addContact()">Добавить</button>
-            <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
         </div>
     </div>
 
-    <!-- Sync Status -->
-    <div class="sync-status" id="syncStatus">
-        <span id="syncIcon">☁️</span>
-        <span id="syncText">Синхронизировано</span>
-    </div>
-
     <script>
-        // Crypto Utilities
-        class CryptoUtils {
-            static async deriveKey(password, salt) {
+        // Crypto utilities
+        const CryptoUtil = {
+            generateKey() {
+                const array = new Uint8Array(32);
+                crypto.getRandomValues(array);
+                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+            },
+
+            async encrypt(text, key) {
                 const encoder = new TextEncoder();
-                const keyMaterial = await window.crypto.subtle.importKey(
-                    'raw',
-                    encoder.encode(password),
-                    'PBKDF2',
-                    false,
-                    ['deriveBits', 'deriveKey']
+                const data = encoder.encode(text);
+                const hash = await crypto.subtle.digest('SHA-256', encoder.encode(key));
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                
+                const cryptoKey = await crypto.subtle.importKey(
+                    'raw', hash, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
                 );
                 
-                return await window.crypto.subtle.deriveKey(
-                    {
-                        name: 'PBKDF2',
-                        salt: salt,
-                        iterations: 100000,
-                        hash: 'SHA-256'
-                    },
-                    keyMaterial,
-                    { name: 'AES-GCM', length: 256 },
-                    false,
-                    ['encrypt', 'decrypt']
+                const encrypted = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv }, cryptoKey, data
                 );
-            }
-
-            static async generateKeyPair() {
-                return await window.crypto.subtle.generateKey(
-                    {
-                        name: 'ECDH',
-                        namedCurve: 'P-256'
-                    },
-                    true,
-                    ['deriveBits']
-                );
-            }
-
-            static async encryptMessage(message, key) {
-                const encoder = new TextEncoder();
-                const iv = window.crypto.getRandomValues(new Uint8Array(12));
-                const encoded = encoder.encode(message);
                 
-                const encrypted = await window.crypto.subtle.encrypt(
-                    { name: 'AES-GCM', iv: iv },
-                    key,
-                    encoded
-                );
+                const combined = new Uint8Array(iv.length + encrypted.byteLength);
+                combined.set(iv);
+                combined.set(new Uint8Array(encrypted), iv.length);
+                
+                return btoa(String.fromCharCode(...combined));
+            },
 
-                return {
-                    iv: Array.from(iv),
-                    data: Array.from(new Uint8Array(encrypted))
-                };
-            }
-
-            static async decryptMessage(encryptedObj, key) {
+            async decrypt(encryptedBase64, key) {
                 try {
-                    const iv = new Uint8Array(encryptedObj.iv);
-                    const data = new Uint8Array(encryptedObj.data);
+                    const encrypted = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+                    const iv = encrypted.slice(0, 12);
+                    const data = encrypted.slice(12);
                     
-                    const decrypted = await window.crypto.subtle.decrypt(
-                        { name: 'AES-GCM', iv: iv },
-                        key,
-                        data
+                    const encoder = new TextEncoder();
+                    const hash = await crypto.subtle.digest('SHA-256', encoder.encode(key));
+                    
+                    const cryptoKey = await crypto.subtle.importKey(
+                        'raw', hash, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
                     );
                     
-                    const decoder = new TextDecoder();
-                    return decoder.decode(decrypted);
+                    const decrypted = await crypto.subtle.decrypt(
+                        { name: 'AES-GCM', iv }, cryptoKey, data
+                    );
+                    
+                    return new TextDecoder().decode(decrypted);
                 } catch (e) {
                     return null;
                 }
             }
+        };
 
-            static async exportKey(key) {
-                const exported = await window.crypto.subtle.exportKey('raw', key);
-                return Array.from(new Uint8Array(exported));
-            }
-
-            static async importKey(keyData) {
-                return await window.crypto.subtle.importKey(
-                    'raw',
-                    new Uint8Array(keyData),
-                    'AES-GCM',
-                    false,
-                    ['encrypt', 'decrypt']
-                );
-            }
-
-            static generateId() {
-                return Date.now().toString(36) + Math.random().toString(36).substr(2);
-            }
-        }
-
-        // App State
+        // App state
         let currentUser = null;
-        let currentChat = null;
+        let userId = null;
         let encryptionKey = null;
-        let db = null;
-        let isRegistering = false;
+        let githubConfig = null;
+        let messages = [];
+        let currentChat = 'general';
+        let lastSha = null;
 
-        // Initialize
-        async function init() {
-            await initDB();
-            updateStorageInfo();
-            
-            // Auto-resize textarea
-            const textarea = document.getElementById('messageInput');
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-            });
-
-            // Enter to send
-            textarea.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-        }
-
-        // IndexedDB Setup
-        async function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('SecureMessenger', 1);
-                
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => {
-                    db = request.result;
-                    resolve();
-                };
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains('users')) {
-                        db.createObjectStore('users', { keyPath: 'username' });
-                    }
-                    if (!db.objectStoreNames.contains('messages')) {
-                        const msgStore = db.createObjectStore('messages', { keyPath: 'id' });
-                        msgStore.createIndex('chat', ['sender', 'receiver'], { unique: false });
-                    }
-                    if (!db.objectStoreNames.contains('contacts')) {
-                        db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-            });
-        }
-
-        // Auth Functions
-        function toggleAuthMode() {
-            isRegistering = !isRegistering;
-            const confirmGroup = document.getElementById('confirmPasswordGroup');
-            const authBtn = document.getElementById('authBtn');
-            const toggleBtn = document.getElementById('toggleAuthBtn');
-            
-            if (isRegistering) {
-                confirmGroup.style.display = 'block';
-                authBtn.textContent = 'Создать аккаунт';
-                toggleBtn.textContent = 'Уже есть аккаунт';
-            } else {
-                confirmGroup.style.display = 'none';
-                authBtn.textContent = 'Войти';
-                toggleBtn.textContent = 'Создать аккаунт';
+        // Generate unique ID from username
+        function generateUserId(username) {
+            let hash = 0;
+            for (let i = 0; i < username.length; i++) {
+                const char = username.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
             }
-            document.getElementById('authError').style.display = 'none';
+            return Math.abs(hash).toString(16).substring(0, 8);
         }
 
-        async function handleAuth() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPass = document.getElementById('confirmPassword').value;
-            const errorEl = document.getElementById('authError');
-            
-            if (!username || !password) {
-                showAuthError('Заполните все поля');
+        // Login
+        async function login() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const repo = document.getElementById('repoInput').value.trim();
+            const token = document.getElementById('tokenInput').value.trim();
+
+            if (!username || !repo || !token) {
+                alert('Заполните все поля!');
                 return;
             }
 
-            if (isRegistering) {
-                if (password !== confirmPass) {
-                    showAuthError('Пароли не совпадают');
-                    return;
-                }
-                if (password.length < 8) {
-                    showAuthError('Пароль должен быть минимум 8 символов');
-                    return;
-                }
-                await registerUser(username, password);
-            } else {
-                await loginUser(username, password);
-            }
-        }
-
-        function showAuthError(msg) {
-            const errorEl = document.getElementById('authError');
-            errorEl.textContent = msg;
-            errorEl.style.display = 'block';
-        }
-
-        async function registerUser(username, password) {
-            try {
-                const salt = window.crypto.getRandomValues(new Uint8Array(16));
-                const key = await CryptoUtils.deriveKey(password, salt);
-                const keyData = await CryptoUtils.exportKey(key);
-                
-                const user = {
-                    username,
-                    salt: Array.from(salt),
-                    keyData: keyData,
-                    created: Date.now()
-                };
-
-                const tx = db.transaction('users', 'readwrite');
-                const store = tx.objectStore('users');
-                
-                // Check if exists
-                const existing = await new Promise((resolve) => {
-                    const req = store.get(username);
-                    req.onsuccess = () => resolve(req.result);
-                });
-
-                if (existing) {
-                    showAuthError('Пользователь уже существует');
-                    return;
-                }
-
-                await new Promise((resolve, reject) => {
-                    const req = store.add(user);
-                    req.onsuccess = () => resolve();
-                    req.onerror = () => reject(req.error);
-                });
-
-                // Show recovery key
-                const recoveryKey = btoa(JSON.stringify({username, key: keyData}));
-                document.getElementById('keyDisplay').style.display = 'block';
-                document.getElementById('keyDisplay').innerHTML = `
-                    <strong>Сохраните этот ключ для восстановления:</strong><br>
-                    ${recoveryKey.match(/.{1,40}/g).join('<br>')}
-                `;
-                
-                setTimeout(() => {
-                    loginUser(username, password);
-                }, 3000);
-
-            } catch (e) {
-                showAuthError('Ошибка регистрации: ' + e.message);
-            }
-        }
-
-        async function loginUser(username, password) {
-            try {
-                const tx = db.transaction('users', 'readonly');
-                const store = tx.objectStore('users');
-                
-                const user = await new Promise((resolve) => {
-                    const req = store.get(username);
-                    req.onsuccess = () => resolve(req.result);
-                });
-
-                if (!user) {
-                    showAuthError('Пользователь не найден');
-                    return;
-                }
-
-                const salt = new Uint8Array(user.salt);
-                const key = await CryptoUtils.deriveKey(password, salt);
-                const keyData = await CryptoUtils.exportKey(key);
-                
-                // Verify key
-                if (JSON.stringify(keyData) !== JSON.stringify(user.keyData)) {
-                    showAuthError('Неверный пароль');
-                    return;
-                }
-
-                currentUser = user;
-                encryptionKey = key;
-                
-                document.getElementById('authScreen').style.display = 'none';
-                document.getElementById('appContainer').style.display = 'flex';
-                document.getElementById('currentUserName').textContent = username;
-                document.getElementById('userAvatar').textContent = username[0].toUpperCase();
-                
-                await loadContacts();
-                await syncWithGitHub();
-
-            } catch (e) {
-                showAuthError('Ошибка входа: ' + e.message);
-            }
-        }
-
-        // Contact Management
-        async function loadContacts() {
-            const tx = db.transaction('contacts', 'readonly');
-            const store = tx.objectStore('contacts');
-            
-            const contacts = await new Promise((resolve) => {
-                const req = store.getAll();
-                req.onsuccess = () => resolve(req.result);
-            });
-
-            const listEl = document.getElementById('contactsList');
-            listEl.innerHTML = '';
-
-            if (contacts.length === 0) {
-                listEl.innerHTML = `
-                    <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
-                        <p>Нет контактов</p>
-                        <button class="btn" style="margin-top: 1rem;" onclick="showAddContact()">
-                            Добавить первый контакт
-                        </button>
-                    </div>
-                `;
+            if (!repo.includes('/')) {
+                alert('Репозиторий должен быть в формате: username/repo');
                 return;
             }
 
-            contacts.forEach(contact => {
-                const div = document.createElement('div');
-                div.className = 'contact-item';
-                div.onclick = () => selectContact(contact);
-                div.innerHTML = `
-                    <div class="contact-avatar">${contact.name[0].toUpperCase()}</div>
-                    <div class="contact-info">
-                        <div class="contact-name">${contact.name}</div>
-                        <div class="contact-preview">Нажмите чтобы начать чат</div>
-                    </div>
-                `;
-                listEl.appendChild(div);
-            });
+            currentUser = username;
+            userId = generateUserId(username);
+            encryptionKey = await CryptoUtil.generateKey();
+            githubConfig = { repo, token };
 
-            // Add button at bottom
-            const addBtn = document.createElement('button');
-            addBtn.className = 'add-contact-btn';
-            addBtn.style.width = '100%';
-            addBtn.style.marginTop = '1rem';
-            addBtn.innerHTML = '+ Добавить контакт';
-            addBtn.onclick = showAddContact;
-            listEl.appendChild(addBtn);
+            document.getElementById('currentUser').textContent = username;
+            document.getElementById('userId').textContent = `ID: ${userId}`;
+
+            // Transition
+            document.getElementById('authScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('app').style.display = 'flex';
+                loadMessages();
+                startSync();
+            }, 500);
         }
 
-        function showAddContact() {
-            document.getElementById('addContactModal').classList.add('active');
+        // GitHub API functions
+        async function getFileSha() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${githubConfig.repo}/contents/messages.json`, {
+                    headers: {
+                        'Authorization': `token ${githubConfig.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.status === 404) return null;
+                if (!response.ok) throw new Error('GitHub API error');
+                
+                const data = await response.json();
+                lastSha = data.sha;
+                return data;
+            } catch (e) {
+                console.error('Error getting file:', e);
+                return null;
+            }
         }
 
-        function closeModal() {
-            document.getElementById('addContactModal').classList.remove('active');
-            document.getElementById('newContactName').value = '';
-            document.getElementById('newContactKey').value = '';
-        }
-
-        async function addContact() {
-            const name = document.getElementById('newContactName').value.trim();
-            const key = document.getElementById('newContactKey').value.trim();
-            
-            if (!name) return;
-
-            const contact = {
-                name,
-                publicKey: key || null,
-                added: Date.now()
-            };
-
-            const tx = db.transaction('contacts', 'readwrite');
-            const store = tx.objectStore('contacts');
-            await new Promise((resolve) => {
-                const req = store.add(contact);
-                req.onsuccess = () => resolve();
-            });
-
-            closeModal();
-            await loadContacts();
-        }
-
-        async function selectContact(contact) {
-            currentChat = contact;
-            
-            // Update UI
-            document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            document.getElementById('chatHeader').style.display = 'flex';
-            document.getElementById('inputContainer').style.display = 'block';
-            document.getElementById('emptyState').style.display = 'none';
-            document.getElementById('chatName').textContent = contact.name;
-            document.getElementById('chatAvatar').textContent = contact.name[0].toUpperCase();
-            
-            await loadMessages();
-        }
-
-        // Messaging
         async function loadMessages() {
-            if (!currentChat) return;
-
-            const tx = db.transaction('messages', 'readonly');
-            const store = tx.objectStore('messages');
-            
-            const allMessages = await new Promise((resolve) => {
-                const req = store.getAll();
-                req.onsuccess = () => resolve(req.result);
-            });
-
-            const chatMessages = allMessages.filter(m => 
-                (m.sender === currentUser.username && m.receiver === currentChat.name) ||
-                (m.sender === currentChat.name && m.receiver === currentUser.username)
-            ).sort((a, b) => a.timestamp - b.timestamp);
-
-            const container = document.getElementById('messagesContainer');
-            container.innerHTML = '';
-
-            for (const msg of chatMessages) {
-                await displayMessage(msg);
-            }
-
-            container.scrollTop = container.scrollHeight;
-        }
-
-        async function displayMessage(msg) {
-            const container = document.getElementById('messagesContainer');
-            const isSent = msg.sender === currentUser.username;
-            
-            // Decrypt if needed
-            let content = msg.content;
-            if (msg.encrypted && encryptionKey) {
-                const decrypted = await CryptoUtils.decryptMessage(msg.encrypted, encryptionKey);
-                if (decrypted) content = decrypted;
-            }
-
-            const div = document.createElement('div');
-            div.className = `message ${isSent ? 'sent' : 'received'}`;
-            div.innerHTML = `
-                <div class="message-content">${escapeHtml(content)}</div>
-                <div class="message-time">
-                    ${new Date(msg.timestamp).toLocaleTimeString()}
-                    ${isSent ? '✓✓' : ''}
-                </div>
-            `;
-            
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const content = input.value.trim();
-            
-            if (!content || !currentChat) return;
-
-            const encrypted = await CryptoUtils.encryptMessage(content, encryptionKey);
-            
-            const message = {
-                id: CryptoUtils.generateId(),
-                sender: currentUser.username,
-                receiver: currentChat.name,
-                content: content, // Store plain for demo, encrypted for production
-                encrypted: encrypted,
-                timestamp: Date.now(),
-                read: false
-            };
-
-            const tx = db.transaction('messages', 'readwrite');
-            const store = tx.objectStore('messages');
-            await new Promise((resolve) => {
-                const req = store.add(message);
-                req.onsuccess = () => resolve();
-            });
-
-            input.value = '';
-            input.style.height = 'auto';
-            
-            await displayMessage(message);
-            await syncWithGitHub();
-        }
-
-        // GitHub Sync (Simulation for GitHub Pages)
-        async function syncWithGitHub() {
-            const statusEl = document.getElementById('syncStatus');
-            const iconEl = document.getElementById('syncIcon');
-            const textEl = document.getElementById('syncText');
-            
-            statusEl.classList.add('syncing');
-            iconEl.textContent = '🔄';
-            textEl.textContent = 'Синхронизация...';
-
             try {
-                // Export all data
-                const tx = db.transaction(['messages', 'contacts'], 'readonly');
-                const msgStore = tx.objectStore('messages');
-                const contactStore = tx.objectStore('contacts');
+                const fileData = await getFileSha();
                 
-                const messages = await new Promise((resolve) => {
-                    const req = msgStore.getAll();
-                    req.onsuccess = () => resolve(req.result);
-                });
-                
-                const contacts = await new Promise((resolve) => {
-                    const req = contactStore.getAll();
-                    req.onsuccess = () => resolve(req.result);
-                });
+                if (!fileData) {
+                    messages = [];
+                    return;
+                }
 
-                const exportData = {
-                    version: 1,
-                    exported: Date.now(),
-                    user: currentUser.username,
-                    messages: messages,
-                    contacts: contacts
+                const content = atob(fileData.content);
+                const encryptedData = JSON.parse(content);
+                
+                // Decrypt messages
+                const decryptedMessages = [];
+                for (const msg of encryptedData.messages || []) {
+                    const decrypted = await CryptoUtil.decrypt(msg.content, encryptionKey);
+                    if (decrypted) {
+                        decryptedMessages.push({
+                            ...msg,
+                            content: decrypted,
+                            encrypted: false
+                        });
+                    } else {
+                        decryptedMessages.push(msg); // Keep encrypted if can't decrypt
+                    }
+                }
+                
+                messages = decryptedMessages;
+                renderMessages();
+            } catch (e) {
+                console.error('Error loading messages:', e);
+                messages = [];
+            }
+        }
+
+        async function saveMessages() {
+            try {
+                // Encrypt all messages before saving
+                const encryptedMessages = [];
+                for (const msg of messages) {
+                    if (!msg.encrypted) {
+                        const encrypted = await CryptoUtil.encrypt(msg.content, encryptionKey);
+                        encryptedMessages.push({
+                            ...msg,
+                            content: encrypted,
+                            encrypted: true
+                        });
+                    } else {
+                        encryptedMessages.push(msg);
+                    }
+                }
+
+                const content = btoa(JSON.stringify({ 
+                    messages: encryptedMessages,
+                    lastUpdate: new Date().toISOString()
+                }));
+
+                const body = {
+                    message: `Update messages ${new Date().toISOString()}`,
+                    content: content
                 };
 
-                // Encrypt export
-                const encryptedExport = await CryptoUtils.encryptMessage(
-                    JSON.stringify(exportData), 
-                    encryptionKey
-                );
+                if (lastSha) {
+                    body.sha = lastSha;
+                }
 
-                // Store in localStorage as backup (in real app, this would go to GitHub API)
-                localStorage.setItem('messenger_backup', JSON.stringify(encryptedExport));
-                
-                // Simulate API delay
-                await new Promise(r => setTimeout(r, 1000));
-                
-                statusEl.classList.remove('syncing');
-                statusEl.classList.remove('error');
-                iconEl.textContent = '☁️';
-                textEl.textContent = 'Синхронизировано';
-                
+                const response = await fetch(`https://api.github.com/repos/${githubConfig.repo}/contents/messages.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubConfig.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message);
+                }
+
+                const data = await response.json();
+                lastSha = data.content.sha;
+                return true;
             } catch (e) {
-                statusEl.classList.remove('syncing');
-                statusEl.classList.add('error');
-                iconEl.textContent = '⚠️';
-                textEl.textContent = 'Ошибка синхронизации';
+                console.error('Error saving messages:', e);
+                alert('Ошибка сохранения: ' + e.message);
+                return false;
             }
         }
 
-        // Utilities
+        // UI Functions
+        function renderMessages() {
+            const container = document.getElementById('messages');
+            const chatMessages = messages.filter(m => m.chat === currentChat);
+            
+            if (chatMessages.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <p>Начните общение...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = chatMessages.map(msg => `
+                <div class="message ${msg.sender === currentUser ? 'sent' : 'received'}">
+                    <div class="message-content">${escapeHtml(msg.content)}</div>
+                    <div class="message-meta">
+                        <span>${msg.sender}</span>
+                        <span>•</span>
+                        <span>${new Date(msg.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        function updateStorageInfo() {
-            let total = 0;
-            for (let key in localStorage) {
-                if (localStorage.hasOwnProperty(key)) {
-                    total += localStorage[key].length * 2; // UTF-16
-                }
-            }
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
             
-            const used = (total / 1024).toFixed(1);
-            const percent = Math.min((total / 5120000) * 100, 100); // 5MB limit
-            
-            document.getElementById('storageUsed').textContent = used + ' KB';
-            document.getElementById('storageBar').style.width = percent + '%';
+            if (!text) return;
+
+            const message = {
+                id: Date.now().toString(),
+                sender: currentUser,
+                senderId: userId,
+                content: text,
+                chat: currentChat,
+                timestamp: Date.now(),
+                encrypted: false
+            };
+
+            messages.push(message);
+            input.value = '';
+            renderMessages();
+
+            // Save to GitHub
+            await saveMessages();
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
         }
 
-        function showSettings() {
-            // Export data functionality
-            const data = localStorage.getItem('messenger_backup');
-            if (data) {
-                const blob = new Blob([data], {type: 'application/json'});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `messenger_backup_${currentUser.username}_${Date.now()}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
+        function selectContact(contact) {
+            currentChat = contact;
+            document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById('chatTitle').textContent = contact === 'general' ? 'Общий чат' : contact;
+            renderMessages();
         }
 
-        // Initialize
-        window.onload = init;
+        function logout() {
+            location.reload();
+        }
+
+        // Auto-sync every 10 seconds
+        function startSync() {
+            setInterval(async () => {
+                await loadMessages();
+            }, 10000);
+        }
+
+        // Add new contact
+        function addContact(name) {
+            const contacts = document.getElementById('contacts');
+            const div = document.createElement('div');
+            div.className = 'contact-item';
+            div.onclick = () => selectContact(name);
+            div.innerHTML = `
+                <div class="contact-avatar">${name[0].toUpperCase()}</div>
+                <div>
+                    <div style="font-weight: bold;">${name}</div>
+                    <div style="font-size: 0.8em; color: #666;">Личный чат</div>
+                </div>
+            `;
+            contacts.appendChild(div);
+        }
+
+        // Initialize with some demo data if needed
+        window.onload = () => {
+            document.getElementById('usernameInput').focus();
+        };
     </script>
 </body>
 </html>
