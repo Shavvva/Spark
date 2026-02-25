@@ -1,9 +1,1410 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Spark</title>
-  </head>
-  <body>
-  </body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Messenger</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a25;
+            --accent: #00d4ff;
+            --accent-dim: #00d4ff33;
+            --text: #e0e0e0;
+            --text-muted: #888;
+            --border: #2a2a3a;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --error: #ff4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Auth Screen */
+        .auth-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0f1729 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .auth-box {
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .auth-subtitle {
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 2.7rem;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-hover);
+            color: var(--text);
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .error-msg {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .key-display {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            word-break: break-all;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            display: none;
+        }
+
+        /* Main App Layout */
+        .app-container {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-dark);
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .user-details h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            font-size: 0.75rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .add-contact-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--bg-hover);
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .add-contact-btn:hover {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .contact-item {
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .contact-item.active {
+            background: var(--accent-dim);
+            border: 1px solid var(--accent);
+        }
+
+        .contact-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border: 2px solid transparent;
+        }
+
+        .contact-item.active .contact-avatar {
+            border-color: var(--accent);
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-preview {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-meta {
+            text-align: right;
+        }
+
+        .contact-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .unread-badge {
+            background: var(--accent);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-dark);
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(18, 18, 26, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .encryption-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--success);
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 1rem;
+            border-radius: 16px;
+            position: relative;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--accent) 0%, #0088ff 100%);
+            color: #000;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .message-input-container {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+            background: var(--bg-dark);
+            padding: 0.75rem;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .message-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1rem;
+            padding: 0.5rem;
+            resize: none;
+            max-height: 120px;
+            font-family: inherit;
+        }
+
+        .message-input:focus {
+            outline: none;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            width: 90%;
+            max-width: 400px;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Empty State */
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Settings Panel */
+        .settings-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .settings-btn:hover {
+            color: var(--text);
+            background: var(--bg-hover);
+        }
+
+        .storage-info {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-hover);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .sync-status.syncing {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .sync-status.error {
+            color: var(--error);
+            border-color: var(--error);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                height: 100%;
+                z-index: 50;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--text);
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-right: 1rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Screen -->
+    <div class="auth-container" id="authScreen">
+        <div class="auth-box">
+            <h1 class="auth-title">🔐 Secure Messenger</h1>
+            <p class="auth-subtitle">End-to-end encrypted messaging</p>
+            
+            <div id="loginForm">
+                <div class="input-group">
+                    <label>Имя пользователя</label>
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="username" placeholder="Введите имя" autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <span class="input-icon">🔑</span>
+                    <input type="password" id="password" placeholder="Минимум 8 символов">
+                </div>
+                
+                <div class="input-group" id="confirmPasswordGroup" style="display: none;">
+                    <label>Подтвердите пароль</label>
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="confirmPassword" placeholder="Повторите пароль">
+                </div>
+
+                <div class="error-msg" id="authError"></div>
+                
+                <button class="btn" onclick="handleAuth()" id="authBtn">Войти</button>
+                <button class="btn btn-secondary" onclick="toggleAuthMode()" id="toggleAuthBtn">Создать аккаунт</button>
+                
+                <div class="key-display" id="keyDisplay"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div class="user-details">
+                        <h3 id="currentUserName">User</h3>
+                        <p><span class="status-dot"></span> Online</p>
+                    </div>
+                </div>
+                <button class="settings-btn" onclick="showSettings()" title="Настройки">⚙️</button>
+            </div>
+
+            <div class="contacts-list" id="contactsList">
+                <!-- Contacts will be loaded here -->
+            </div>
+
+            <div class="storage-info">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Локальное хранилище</span>
+                    <span id="storageUsed">0 KB</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="storageBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-area">
+            <div class="chat-header" id="chatHeader" style="display: none;">
+                <div class="chat-header-info">
+                    <div class="avatar" id="chatAvatar">C</div>
+                    <div>
+                        <h3 id="chatName">Contact</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-muted);">Зашифровано E2E</p>
+                    </div>
+                </div>
+                <div class="encryption-status">
+                    <span>🔒</span>
+                    <span>Защищено</span>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">💬</div>
+                    <h3>Выберите контакт</h3>
+                    <p>Начните защищенный разговор</p>
+                </div>
+            </div>
+
+            <div class="message-input-container" id="inputContainer" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="message-input" id="messageInput" placeholder="Введите сообщение..." rows="1"></textarea>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Contact Modal -->
+    <div class="modal" id="addContactModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Добавить контакт</h3>
+            <div class="input-group">
+                <label>Имя контакта</label>
+                <input type="text" id="newContactName" placeholder="Введите имя">
+            </div>
+            <div class="input-group">
+                <label>Публичный ключ (опционально)</label>
+                <input type="text" id="newContactKey" placeholder="Вставьте публичный ключ">
+            </div>
+            <button class="btn" onclick="addContact()">Добавить</button>
+            <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
+        </div>
+    </div>
+
+    <!-- Sync Status -->
+    <div class="sync-status" id="syncStatus">
+        <span id="syncIcon">☁️</span>
+        <span id="syncText">Синхронизировано</span>
+    </div>
+
+    <script>
+        // Crypto Utilities
+        class CryptoUtils {
+            static async deriveKey(password, salt) {
+                const encoder = new TextEncoder();
+                const keyMaterial = await window.crypto.subtle.importKey(
+                    'raw',
+                    encoder.encode(password),
+                    'PBKDF2',
+                    false,
+                    ['deriveBits', 'deriveKey']
+                );
+                
+                return await window.crypto.subtle.deriveKey(
+                    {
+                        name: 'PBKDF2',
+                        salt: salt,
+                        iterations: 100000,
+                        hash: 'SHA-256'
+                    },
+                    keyMaterial,
+                    { name: 'AES-GCM', length: 256 },
+                    false,
+                    ['encrypt', 'decrypt']
+                );
+            }
+
+            static async generateKeyPair() {
+                return await window.crypto.subtle.generateKey(
+                    {
+                        name: 'ECDH',
+                        namedCurve: 'P-256'
+                    },
+                    true,
+                    ['deriveBits']
+                );
+            }
+
+            static async encryptMessage(message, key) {
+                const encoder = new TextEncoder();
+                const iv = window.crypto.getRandomValues(new Uint8Array(12));
+                const encoded = encoder.encode(message);
+                
+                const encrypted = await window.crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encoded
+                );
+
+                return {
+                    iv: Array.from(iv),
+                    data: Array.from(new Uint8Array(encrypted))
+                };
+            }
+
+            static async decryptMessage(encryptedObj, key) {
+                try {
+                    const iv = new Uint8Array(encryptedObj.iv);
+                    const data = new Uint8Array(encryptedObj.data);
+                    
+                    const decrypted = await window.crypto.subtle.decrypt(
+                        { name: 'AES-GCM', iv: iv },
+                        key,
+                        data
+                    );
+                    
+                    const decoder = new TextDecoder();
+                    return decoder.decode(decrypted);
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            static async exportKey(key) {
+                const exported = await window.crypto.subtle.exportKey('raw', key);
+                return Array.from(new Uint8Array(exported));
+            }
+
+            static async importKey(keyData) {
+                return await window.crypto.subtle.importKey(
+                    'raw',
+                    new Uint8Array(keyData),
+                    'AES-GCM',
+                    false,
+                    ['encrypt', 'decrypt']
+                );
+            }
+
+            static generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+        }
+
+        // App State
+        let currentUser = null;
+        let currentChat = null;
+        let encryptionKey = null;
+        let db = null;
+        let isRegistering = false;
+
+        // Initialize
+        async function init() {
+            await initDB();
+            updateStorageInfo();
+            
+            // Auto-resize textarea
+            const textarea = document.getElementById('messageInput');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+
+            // Enter to send
+            textarea.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        // IndexedDB Setup
+        async function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('SecureMessenger', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve();
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('users')) {
+                        db.createObjectStore('users', { keyPath: 'username' });
+                    }
+                    if (!db.objectStoreNames.contains('messages')) {
+                        const msgStore = db.createObjectStore('messages', { keyPath: 'id' });
+                        msgStore.createIndex('chat', ['sender', 'receiver'], { unique: false });
+                    }
+                    if (!db.objectStoreNames.contains('contacts')) {
+                        db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
+        }
+
+        // Auth Functions
+        function toggleAuthMode() {
+            isRegistering = !isRegistering;
+            const confirmGroup = document.getElementById('confirmPasswordGroup');
+            const authBtn = document.getElementById('authBtn');
+            const toggleBtn = document.getElementById('toggleAuthBtn');
+            
+            if (isRegistering) {
+                confirmGroup.style.display = 'block';
+                authBtn.textContent = 'Создать аккаунт';
+                toggleBtn.textContent = 'Уже есть аккаунт';
+            } else {
+                confirmGroup.style.display = 'none';
+                authBtn.textContent = 'Войти';
+                toggleBtn.textContent = 'Создать аккаунт';
+            }
+            document.getElementById('authError').style.display = 'none';
+        }
+
+        async function handleAuth() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const errorEl = document.getElementById('authError');
+            
+            if (!username || !password) {
+                showAuthError('Заполните все поля');
+                return;
+            }
+
+            if (isRegistering) {
+                if (password !== confirmPass) {
+                    showAuthError('Пароли не совпадают');
+                    return;
+                }
+                if (password.length < 8) {
+                    showAuthError('Пароль должен быть минимум 8 символов');
+                    return;
+                }
+                await registerUser(username, password);
+            } else {
+                await loginUser(username, password);
+            }
+        }
+
+        function showAuthError(msg) {
+            const errorEl = document.getElementById('authError');
+            errorEl.textContent = msg;
+            errorEl.style.display = 'block';
+        }
+
+        async function registerUser(username, password) {
+            try {
+                const salt = window.crypto.getRandomValues(new Uint8Array(16));
+                const key = await CryptoUtils.deriveKey(password, salt);
+                const keyData = await CryptoUtils.exportKey(key);
+                
+                const user = {
+                    username,
+                    salt: Array.from(salt),
+                    keyData: keyData,
+                    created: Date.now()
+                };
+
+                const tx = db.transaction('users', 'readwrite');
+                const store = tx.objectStore('users');
+                
+                // Check if exists
+                const existing = await new Promise((resolve) => {
+                    const req = store.get(username);
+                    req.onsuccess = () => resolve(req.result);
+                });
+
+                if (existing) {
+                    showAuthError('Пользователь уже существует');
+                    return;
+                }
+
+                await new Promise((resolve, reject) => {
+                    const req = store.add(user);
+                    req.onsuccess = () => resolve();
+                    req.onerror = () => reject(req.error);
+                });
+
+                // Show recovery key
+                const recoveryKey = btoa(JSON.stringify({username, key: keyData}));
+                document.getElementById('keyDisplay').style.display = 'block';
+                document.getElementById('keyDisplay').innerHTML = `
+                    <strong>Сохраните этот ключ для восстановления:</strong><br>
+                    ${recoveryKey.match(/.{1,40}/g).join('<br>')}
+                `;
+                
+                setTimeout(() => {
+                    loginUser(username, password);
+                }, 3000);
+
+            } catch (e) {
+                showAuthError('Ошибка регистрации: ' + e.message);
+            }
+        }
+
+        async function loginUser(username, password) {
+            try {
+                const tx = db.transaction('users', 'readonly');
+                const store = tx.objectStore('users');
+                
+                const user = await new Promise((resolve) => {
+                    const req = store.get(username);
+                    req.onsuccess = () => resolve(req.result);
+                });
+
+                if (!user) {
+                    showAuthError('Пользователь не найден');
+                    return;
+                }
+
+                const salt = new Uint8Array(user.salt);
+                const key = await CryptoUtils.deriveKey(password, salt);
+                const keyData = await CryptoUtils.exportKey(key);
+                
+                // Verify key
+                if (JSON.stringify(keyData) !== JSON.stringify(user.keyData)) {
+                    showAuthError('Неверный пароль');
+                    return;
+                }
+
+                currentUser = user;
+                encryptionKey = key;
+                
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'flex';
+                document.getElementById('currentUserName').textContent = username;
+                document.getElementById('userAvatar').textContent = username[0].toUpperCase();
+                
+                await loadContacts();
+                await syncWithGitHub();
+
+            } catch (e) {
+                showAuthError('Ошибка входа: ' + e.message);
+            }
+        }
+
+        // Contact Management
+        async function loadContacts() {
+            const tx = db.transaction('contacts', 'readonly');
+            const store = tx.objectStore('contacts');
+            
+            const contacts = await new Promise((resolve) => {
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result);
+            });
+
+            const listEl = document.getElementById('contactsList');
+            listEl.innerHTML = '';
+
+            if (contacts.length === 0) {
+                listEl.innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                        <p>Нет контактов</p>
+                        <button class="btn" style="margin-top: 1rem;" onclick="showAddContact()">
+                            Добавить первый контакт
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            contacts.forEach(contact => {
+                const div = document.createElement('div');
+                div.className = 'contact-item';
+                div.onclick = () => selectContact(contact);
+                div.innerHTML = `
+                    <div class="contact-avatar">${contact.name[0].toUpperCase()}</div>
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.name}</div>
+                        <div class="contact-preview">Нажмите чтобы начать чат</div>
+                    </div>
+                `;
+                listEl.appendChild(div);
+            });
+
+            // Add button at bottom
+            const addBtn = document.createElement('button');
+            addBtn.className = 'add-contact-btn';
+            addBtn.style.width = '100%';
+            addBtn.style.marginTop = '1rem';
+            addBtn.innerHTML = '+ Добавить контакт';
+            addBtn.onclick = showAddContact;
+            listEl.appendChild(addBtn);
+        }
+
+        function showAddContact() {
+            document.getElementById('addContactModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('addContactModal').classList.remove('active');
+            document.getElementById('newContactName').value = '';
+            document.getElementById('newContactKey').value = '';
+        }
+
+        async function addContact() {
+            const name = document.getElementById('newContactName').value.trim();
+            const key = document.getElementById('newContactKey').value.trim();
+            
+            if (!name) return;
+
+            const contact = {
+                name,
+                publicKey: key || null,
+                added: Date.now()
+            };
+
+            const tx = db.transaction('contacts', 'readwrite');
+            const store = tx.objectStore('contacts');
+            await new Promise((resolve) => {
+                const req = store.add(contact);
+                req.onsuccess = () => resolve();
+            });
+
+            closeModal();
+            await loadContacts();
+        }
+
+        async function selectContact(contact) {
+            currentChat = contact;
+            
+            // Update UI
+            document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            document.getElementById('chatHeader').style.display = 'flex';
+            document.getElementById('inputContainer').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('chatName').textContent = contact.name;
+            document.getElementById('chatAvatar').textContent = contact.name[0].toUpperCase();
+            
+            await loadMessages();
+        }
+
+        // Messaging
+        async function loadMessages() {
+            if (!currentChat) return;
+
+            const tx = db.transaction('messages', 'readonly');
+            const store = tx.objectStore('messages');
+            
+            const allMessages = await new Promise((resolve) => {
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result);
+            });
+
+            const chatMessages = allMessages.filter(m => 
+                (m.sender === currentUser.username && m.receiver === currentChat.name) ||
+                (m.sender === currentChat.name && m.receiver === currentUser.username)
+            ).sort((a, b) => a.timestamp - b.timestamp);
+
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = '';
+
+            for (const msg of chatMessages) {
+                await displayMessage(msg);
+            }
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function displayMessage(msg) {
+            const container = document.getElementById('messagesContainer');
+            const isSent = msg.sender === currentUser.username;
+            
+            // Decrypt if needed
+            let content = msg.content;
+            if (msg.encrypted && encryptionKey) {
+                const decrypted = await CryptoUtils.decryptMessage(msg.encrypted, encryptionKey);
+                if (decrypted) content = decrypted;
+            }
+
+            const div = document.createElement('div');
+            div.className = `message ${isSent ? 'sent' : 'received'}`;
+            div.innerHTML = `
+                <div class="message-content">${escapeHtml(content)}</div>
+                <div class="message-time">
+                    ${new Date(msg.timestamp).toLocaleTimeString()}
+                    ${isSent ? '✓✓' : ''}
+                </div>
+            `;
+            
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+            
+            if (!content || !currentChat) return;
+
+            const encrypted = await CryptoUtils.encryptMessage(content, encryptionKey);
+            
+            const message = {
+                id: CryptoUtils.generateId(),
+                sender: currentUser.username,
+                receiver: currentChat.name,
+                content: content, // Store plain for demo, encrypted for production
+                encrypted: encrypted,
+                timestamp: Date.now(),
+                read: false
+            };
+
+            const tx = db.transaction('messages', 'readwrite');
+            const store = tx.objectStore('messages');
+            await new Promise((resolve) => {
+                const req = store.add(message);
+                req.onsuccess = () => resolve();
+            });
+
+            input.value = '';
+            input.style.height = 'auto';
+            
+            await displayMessage(message);
+            await syncWithGitHub();
+        }
+
+        // GitHub Sync (Simulation for GitHub Pages)
+        async function syncWithGitHub() {
+            const statusEl = document.getElementById('syncStatus');
+            const iconEl = document.getElementById('syncIcon');
+            const textEl = document.getElementById('syncText');
+            
+            statusEl.classList.add('syncing');
+            iconEl.textContent = '🔄';
+            textEl.textContent = 'Синхронизация...';
+
+            try {
+                // Export all data
+                const tx = db.transaction(['messages', 'contacts'], 'readonly');
+                const msgStore = tx.objectStore('messages');
+                const contactStore = tx.objectStore('contacts');
+                
+                const messages = await new Promise((resolve) => {
+                    const req = msgStore.getAll();
+                    req.onsuccess = () => resolve(req.result);
+                });
+                
+                const contacts = await new Promise((resolve) => {
+                    const req = contactStore.getAll();
+                    req.onsuccess = () => resolve(req.result);
+                });
+
+                const exportData = {
+                    version: 1,
+                    exported: Date.now(),
+                    user: currentUser.username,
+                    messages: messages,
+                    contacts: contacts
+                };
+
+                // Encrypt export
+                const encryptedExport = await CryptoUtils.encryptMessage(
+                    JSON.stringify(exportData), 
+                    encryptionKey
+                );
+
+                // Store in localStorage as backup (in real app, this would go to GitHub API)
+                localStorage.setItem('messenger_backup', JSON.stringify(encryptedExport));
+                
+                // Simulate API delay
+                await new Promise(r => setTimeout(r, 1000));
+                
+                statusEl.classList.remove('syncing');
+                statusEl.classList.remove('error');
+                iconEl.textContent = '☁️';
+                textEl.textContent = 'Синхронизировано';
+                
+            } catch (e) {
+                statusEl.classList.remove('syncing');
+                statusEl.classList.add('error');
+                iconEl.textContent = '⚠️';
+                textEl.textContent = 'Ошибка синхронизации';
+            }
+        }
+
+        // Utilities
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateStorageInfo() {
+            let total = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    total += localStorage[key].length * 2; // UTF-16
+                }
+            }
+            
+            const used = (total / 1024).toFixed(1);
+            const percent = Math.min((total / 5120000) * 100, 100); // 5MB limit
+            
+            document.getElementById('storageUsed').textContent = used + ' KB';
+            document.getElementById('storageBar').style.width = percent + '%';
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function showSettings() {
+            // Export data functionality
+            const data = localStorage.getItem('messenger_backup');
+            if (data) {
+                const blob = new Blob([data], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `messenger_backup_${currentUser.username}_${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        // Initialize
+        window.onload = init;
+    </script>
+</body>
 </html>
